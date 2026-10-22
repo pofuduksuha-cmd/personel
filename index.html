@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#110b28">
+<title>Etüt Proje | Personel İzin ve Mesai Takip</title>
+<style>
+:root{--bg:#090817;--panel:#15102b;--panel2:#1c1638;--line:rgba(177,127,255,.28);--text:#f7f3ff;--muted:#c0b6dc;--purple:#a76bff;--pink:#ff5bbd;--cyan:#55efff;--green:#72ffc0;--warn:#ffd47a;--danger:#ff7890;--shadow:0 22px 60px rgba(0,0,0,.34)}
+*{box-sizing:border-box}html{min-height:100%;scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font:15px/1.5 Inter,Segoe UI,Arial,sans-serif;background:#090817;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 8% 8%,rgba(130,68,255,.28),transparent 30%),radial-gradient(ellipse at 95% 12%,rgba(255,57,174,.19),transparent 28%),radial-gradient(ellipse at 53% 100%,rgba(39,211,255,.15),transparent 36%),linear-gradient(135deg,#090817,#100a25 54%,#070b1b)}
+body:after{content:"";position:fixed;inset:-30%;z-index:-1;pointer-events:none;background:repeating-linear-gradient(118deg,transparent 0 58px,rgba(150,100,255,.085) 59px 61px,transparent 62px 113px),repeating-linear-gradient(28deg,transparent 0 135px,rgba(76,238,255,.035) 136px 138px,transparent 139px 220px);transform:rotate(-5deg);animation:drift 30s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translateX(-1%) rotate(-5deg)}to{transform:translateX(1%) rotate(-5deg)}}
+button,input,select,textarea{font:inherit}button{cursor:pointer;color:var(--text);border:1px solid rgba(179,123,255,.42);border-radius:12px;padding:10px 14px;background:linear-gradient(135deg,rgba(42,29,77,.96),rgba(18,25,53,.96));transition:transform .16s,border-color .16s,filter .16s}button:hover{transform:translateY(-1px);border-color:var(--cyan);filter:brightness(1.08)}button:disabled{opacity:.45;cursor:not-allowed;transform:none}.primary{background:linear-gradient(110deg,#8050ff,#c43cff 52%,#f34da6);border-color:#dba4ff;font-weight:800;box-shadow:0 7px 24px rgba(172,66,255,.2)}.secondary{background:rgba(20,25,55,.78)}.danger{background:linear-gradient(130deg,#69213f,#381b39);border-color:#fa7299}.good{background:linear-gradient(130deg,#105c59,#163c55);border-color:#55e8d3}
+input,select,textarea{width:100%;border:1px solid rgba(153,123,204,.35);border-radius:11px;padding:11px 12px;color:var(--text);background:rgba(7,7,24,.78);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(85,239,255,.12)}input::placeholder,textarea::placeholder{color:#80779e}select option{background:#16102d;color:white}textarea{resize:vertical;min-height:80px}label{display:block;font-size:12px;color:#d0c4e9;margin-bottom:6px;font-weight:650}.muted{color:var(--muted)}.tiny{font-size:12px}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:800}.hidden{display:none!important}
+/* Login */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px 18px 70px;position:relative;isolation:isolate}.map-decor{position:absolute;top:22px;right:26px;display:flex;align-items:center;gap:10px;color:#bff8ff;font-size:24px;filter:drop-shadow(0 0 14px rgba(86,239,255,.26))}.map-decor span{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(85,239,255,.35);border-radius:13px;background:linear-gradient(135deg,rgba(40,29,77,.72),rgba(16,25,53,.75));backdrop-filter:blur(10px)}.login-wrap{width:min(100%,470px)}.login-brand{text-align:center;margin-bottom:20px}.logo{width:70px;height:64px;margin:0 auto 13px;display:grid;place-items:center;border-radius:19px;font-size:30px;background:linear-gradient(135deg,#7052ff,#d63cff 60%,#ff62b8);border:1px solid #ffffff60;box-shadow:0 0 36px #ae48ff4d}.login-brand h1{font-size:clamp(26px,5vw,35px);margin:5px 0;letter-spacing:-.7px;text-shadow:0 0 24px #b85aff39}.login-brand p{color:#c6b9e4;font-size:13px;margin:8px auto;max-width:370px}.login-card{border:1px solid rgba(195,127,255,.56);border-radius:24px;overflow:hidden;background:linear-gradient(145deg,rgba(31,19,59,.94),rgba(8,10,29,.96));box-shadow:var(--shadow),0 0 42px rgba(154,60,255,.15);backdrop-filter:blur(18px)}.login-top{padding:18px 24px;border-bottom:1px solid rgba(181,114,255,.22);background:linear-gradient(100deg,rgba(123,70,255,.16),rgba(77,225,255,.04));text-align:center}.login-body{padding:22px 24px 24px}.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 20px}.role-card{padding:15px 12px;border-radius:15px;text-align:left;min-height:84px;background:rgba(12,12,34,.64);border:1px solid rgba(150,119,205,.28)}.role-card .role-icon{font-size:22px;margin-bottom:7px}.role-card b{display:block}.role-card span{font-size:11px;color:var(--muted)}.role-card.selected{border-color:var(--cyan);background:linear-gradient(135deg,rgba(112,70,215,.26),rgba(39,173,201,.1));box-shadow:0 0 0 1px #56efff22,0 0 20px #50eaff12}.login-note{padding:10px 12px;border:1px solid rgba(255,212,122,.27);background:rgba(80,52,16,.16);color:#ffe5ad;font-size:11px;border-radius:10px;margin-top:13px}.login-actions{display:grid;gap:9px;margin-top:18px}.login-foot{color:#a89bbf;text-align:center;font-size:11px;padding:14px 8px 0}
+/* App shell */
+#appScreen{min-height:100vh;padding-bottom:45px}.app-header{margin:18px auto 0;width:min(1560px,calc(100% - 34px));display:flex;justify-content:space-between;align-items:center;gap:15px;padding:15px 19px;border:1px solid var(--line);border-radius:18px;background:rgba(12,10,31,.72);backdrop-filter:blur(18px);box-shadow:0 12px 35px #0002}.app-brand{display:flex;gap:12px;align-items:center}.app-logo{height:47px;width:47px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#704cff,#d63cff 58%,#ff60b9);font-size:23px;box-shadow:0 0 22px #a94cff32}.app-brand h2{margin:0;font-size:17px}.app-brand small{display:block;letter-spacing:1px;color:var(--cyan);font-size:9px}.header-right{display:flex;align-items:center;gap:12px}.userpill{display:flex;align-items:center;gap:9px;padding:7px 12px;border:1px solid rgba(153,123,204,.25);border-radius:13px;background:rgba(23,16,49,.55)}.avatar{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#3e72ad,#9e50d4);display:grid;place-items:center;font-weight:800}.userpill b{display:block;font-size:12px}.userpill small{display:block;color:var(--muted);font-size:10px}.container{width:min(1560px,calc(100% - 34px));margin:20px auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px}.sidebar{align-self:start;position:sticky;top:18px;border:1px solid var(--line);background:rgba(12,10,31,.72);backdrop-filter:blur(16px);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.side-title{font-size:10px;letter-spacing:1.7px;color:#9f91c1;margin:5px 9px 12px}.nav{display:grid;gap:7px}.nav button{text-align:left;width:100%;display:flex;gap:11px;align-items:center;background:transparent;border-color:transparent;color:#cfc4e5;padding:12px}.nav button.active{background:linear-gradient(95deg,rgba(131,76,255,.3),rgba(215,60,255,.12),rgba(67,232,255,.07));border-color:rgba(175,104,255,.62);box-shadow:inset 3px 0 #bd62ff}.nav .ico{width:23px;text-align:center;font-size:17px;color:var(--cyan)}.side-tip{margin-top:19px;padding:13px;border-radius:13px;border:1px solid rgba(83,238,255,.2);background:rgba(23,45,65,.22);font-size:11px;color:#c1d9e9}.side-tip strong{color:var(--cyan)}.content{min-width:0}.page{display:none}.page.active{display:block}.page-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:2px 0 17px}.page-heading h1{margin:3px 0 4px;font-size:clamp(24px,3vw,32px);letter-spacing:-.7px}.page-heading p{margin:0;color:var(--muted);font-size:12px}.current-month{border:1px solid rgba(86,239,255,.28);border-radius:12px;padding:8px 11px;font-size:12px;color:var(--cyan);background:rgba(20,48,67,.24);white-space:nowrap}
+.detail-list{display:grid;grid-template-columns:1fr;gap:9px}.detail-item{border:1px solid rgba(155,109,226,.36);border-radius:13px;overflow:hidden;background:linear-gradient(105deg,rgba(32,21,62,.92),rgba(10,14,35,.94))}.detail-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:14px 15px;border:0;border-radius:0;background:transparent;box-shadow:none}.detail-toggle .detail-label{display:flex;align-items:center;gap:11px;font-weight:750}.detail-toggle .detail-ico{width:33px;height:33px;display:grid;place-items:center;border-radius:10px;background:rgba(86,239,255,.10);border:1px solid rgba(86,239,255,.25);font-size:18px}.detail-toggle .detail-action{font-size:11px;color:var(--cyan);white-space:nowrap}.detail-value{padding:14px 16px;border-top:1px solid rgba(86,239,255,.18);font-size:21px;font-weight:850;color:var(--green);background:rgba(5,14,31,.45)}.detail-value small{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-top:3px}.detail-toggle:hover{transform:none;background:rgba(117,76,255,.12)}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:15px}.metric{position:relative;overflow:hidden;border:1px solid rgba(155,109,226,.36);border-radius:16px;padding:16px;background:linear-gradient(140deg,rgba(29,19,58,.92),rgba(10,13,34,.93));box-shadow:0 12px 30px #0002}.metric:after{content:"";position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--pink),transparent);opacity:.6}.metric .symbol{font-size:20px;color:var(--cyan)}.metric strong{display:block;font-size:27px;letter-spacing:-.5px;margin-top:7px}.metric span{font-size:11px;color:var(--muted)}.panel{border:1px solid var(--line);border-radius:17px;overflow:hidden;background:linear-gradient(145deg,rgba(18,13,40,.93),rgba(8,11,29,.94));box-shadow:0 15px 37px rgba(0,0,0,.18);margin-bottom:15px}.panel-head{padding:16px 18px;border-bottom:1px solid rgba(161,115,225,.2);background:linear-gradient(90deg,rgba(125,76,255,.10),transparent);display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-head h3{font-size:15px;margin:0}.panel-body{padding:17px}.notice{padding:11px 13px;border-radius:11px;border:1px solid rgba(86,239,255,.2);background:rgba(26,53,67,.23);color:#d8eaf9;font-size:12px;margin-bottom:14px}.table-wrap{overflow:auto;border:1px solid rgba(151,116,203,.19);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:800px}th{padding:12px 11px;text-align:left;background:rgba(48,30,79,.78);font-size:11px;color:#aef7ff;white-space:nowrap}td{padding:11px;border-top:1px solid rgba(132,101,181,.16);font-size:12px;color:#ece5fa;vertical-align:middle}tbody tr:hover{background:rgba(143,91,255,.08)}.person-name{font-weight:750}.subtext{font-size:10px;color:var(--muted);display:block;margin-top:2px}.tag{display:inline-block;border:1px solid rgba(86,239,255,.35);background:rgba(19,73,82,.25);color:#a8f8ff;border-radius:7px;padding:4px 7px;font-size:10px;white-space:nowrap}.tag.pink{border-color:#e97bbd77;color:#ffc8e7;background:#64254a25}.tag.purple{border-color:#ba8cff70;color:#ddc8ff;background:#48256e30}.tag.warn{border-color:#ffd47a70;color:#ffe2a0;background:#6b4a1325}.row-actions{display:flex;gap:5px}.row-actions button{font-size:10px;padding:6px 8px;white-space:nowrap}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field{min-width:0}.field.full{grid-column:1/-1}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.form-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.section-title{font-size:13px;color:#dcd1f2;margin:0 0 10px}.toolbar{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:13px}.toolbar .grow{flex:1;min-width:200px}.statline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.mini-stat{border:1px solid rgba(156,116,214,.23);border-radius:12px;background:rgba(21,15,46,.65);padding:13px}.mini-stat small{font-size:10px;color:var(--muted);display:block}.mini-stat b{font-size:22px;display:block;margin-top:3px}.activity-list{display:grid;gap:8px}.activity{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:11px;border-radius:11px;border:1px solid rgba(145,112,202,.17);background:rgba(20,14,44,.48)}.activity b{font-size:12px}.activity small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.activity .delta{font-weight:800;color:var(--cyan);white-space:nowrap}.empty{padding:28px;color:var(--muted);text-align:center;font-size:12px}.footer-credit{position:fixed;bottom:0;left:0;right:0;padding:9px 16px;z-index:20;background:linear-gradient(90deg,rgba(8,7,23,.9),rgba(18,9,37,.77));border-top:1px solid rgba(157,99,235,.2);backdrop-filter:blur(12px);font-size:10px;letter-spacing:.7px;color:#c5b4e6;text-align:left}.footer-credit strong{color:#f6d4ff}.status-badge{border:1px solid rgba(255,212,122,.27);color:#ffe6a8;background:rgba(75,50,13,.23);border-radius:9px;padding:6px 9px;font-size:10px}
+@media(max-width:1050px){.container{grid-template-columns:1fr}.sidebar{position:static;padding:10px}.side-title,.side-tip{display:none}.nav{grid-template-columns:repeat(4,minmax(0,1fr))}.nav button{justify-content:center;flex-direction:column;gap:4px;text-align:center;font-size:10px;padding:8px 4px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.app-header{align-items:flex-start}.header-right{flex-wrap:wrap;justify-content:flex-end}}
+@media(max-width:650px){.map-decor{top:10px;right:12px;gap:5px;font-size:18px}.map-decor span{width:31px;height:31px;border-radius:10px}.login-brand{margin-top:42px}.login-body{padding:18px}.role-grid{gap:7px}.role-card{min-height:75px}.app-header{width:calc(100% - 20px);padding:11px}.container{width:calc(100% - 20px);margin:12px auto}.app-brand h2{font-size:13px}.app-brand small{font-size:8px}.app-logo{width:38px;height:38px}.userpill{padding:5px 7px}.header-right{gap:6px}.header-right>button{font-size:10px;padding:7px}.userpill b{max-width:95px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.userpill small{display:none}.page-heading{align-items:flex-start;flex-direction:column}.cards{gap:8px}.metric{padding:12px}.metric strong{font-size:23px}.grid2,.grid3,.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel-head,.panel-body{padding:13px}.statline{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{grid-template-columns:repeat(3,minmax(0,1fr))}.current-month{white-space:normal}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="loginScreen">
+  <div class="map-decor" aria-label="Harita simgeleri" title="Harita ve saha takibi"><span>🗺️</span><span>📍</span><span>🧭</span></div>
+  <div class="login-wrap">
+    <div class="login-brand"><div class="logo" aria-label="Pusula">🧭</div><div class="eyebrow">Etüt Proje ve Tesis Şube</div><h1>PERSONEL TAKİP SİSTEMİ</h1><p>İzin, serbesti ve mesai bilgileri tek ekranda. Güncel kayıtlar için güvenli personel paneli.</p></div>
+    <div class="login-card">
+      <div class="login-top"><b>Giriş alanını seç</b><div class="tiny muted">Yönetici ve personel girişleri birbirinden ayrıdır.</div></div>
+      <div class="login-body">
+        <div class="role-grid">
+          <button class="role-card selected" type="button" data-role="admin"><div class="role-icon">♛</div><b>Yönetici Girişi</b><span>Yetkili yönetici hesabı</span></button>
+          <button class="role-card" type="button" data-role="employee"><div class="role-icon">♙</div><b>Personel Girişi</b><span>Kendi bilgilerini görüntüle</span></button>
+        </div>
+        <form id="loginForm">
+          <div class="field" id="loginNameWrap"><label for="loginName">Yönetici</label><select id="loginName" required></select></div>
+          <div class="field" style="margin-top:13px"><label for="loginPassword">Şifre</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Şifrenizi girin" required></div>
+          <div id="loginError" class="tiny" style="display:none;color:#ff9cae;margin-top:10px"></div>
+          <div class="login-actions"><button class="primary" id="loginSubmit" type="button">Giriş Yap <span aria-hidden="true">→</span></button></div>
+        </form>
+      </div>
+    </div>
+    <div class="login-foot">Supabase kurulumu · Güvenli giriş ve ortak kayıt</div>
+  </div>
+</div>
+
+<div id="appScreen" class="hidden">
+  <header class="app-header"><div class="app-brand"><div class="app-logo">🧭</div><div><h2>ETÜT PROJE PERSONEL</h2><small>İZİN · SERBESTİ · MESAİ TAKİBİ</small></div></div><div class="header-right"><span class="status-badge">ÖNİZLEME / YEREL KAYIT</span><div class="userpill"><div class="avatar" id="headerAvatar">S</div><div><b id="headerName">Suat Durdu</b><small id="headerRole">Yönetici</small></div></div><button id="refreshCloudBtn" class="secondary" type="button">↻ Verileri yenile</button><button id="logoutBtn" class="secondary">Çıkış</button></div></header>
+  <div class="container">
+    <aside class="sidebar"><div class="side-title">MENÜ</div><nav class="nav" id="navMenu"></nav><div class="side-tip"><strong>Not:</strong><br>Bulut kayıtları Supabase üzerinde saklanır; erişim kullanıcı rolüne göre kısıtlanır.</div></aside>
+    <main class="content">
+      <section class="page active" id="page-dashboard">
+        <div class="page-heading"><div><div class="eyebrow" id="dashEyebrow">Yönetim merkezi</div><h1 id="dashTitle">Personel Durum Paneli</h1><p id="dashSub">Tüm izin ve mesai kayıtlarını görüntüle, günlük güncellemeleri yap.</p></div><div class="current-month" id="monthLabel"></div></div>
+        <div id="adminDashboard">
+          <div class="cards">
+            <div class="metric"><div class="symbol">♙</div><strong id="staffCountMetric">10</strong><span>Kayıtlı personel</span></div>
+            <div class="metric"><div class="symbol">◷</div><strong id="annualTotalMetric">0</strong><span>Kalan yıllık izin günü (toplam)</span></div>
+            <div class="metric"><div class="symbol">✦</div><strong id="compTotalMetric">0</strong><span>Kalan serbesti günü (toplam)</span></div>
+            <div class="metric"><div class="symbol">⌁</div><strong id="overtimeMetric">0</strong><span>Bu ay mesai saati (toplam)</span></div>
+          </div>
+          <div class="panel"><div class="panel-head"><h3>Personel takip özeti</h3><button class="primary" data-goto="staff">+ Personel yönetimi</button></div><div class="panel-body"><div class="toolbar"><input class="grow" id="dashboardSearch" placeholder="Personel adına göre ara..."><select id="dashboardTitleFilter" style="display:none!important;max-width:220px"><option value="">Tüm kayıtlar</option></select></div><div class="table-wrap"><table><thead><tr><th>Personel</th><th>Kalan yıllık izin</th><th>Kalan serbesti</th><th>Mazeret kullanılan (toplam)</th><th>Ücretsiz kullanılan (toplam)</th><th>Hafta tatili mesaisi</th><th>Aylık mesai</th><th>İşlem</th></tr></thead><tbody id="dashboardRows"></tbody></table></div></div></div>
+          <div class="panel"><div class="panel-head"><h3>Son günlük güncellemeler</h3><button data-goto="activity">Tüm hareketler →</button></div><div class="panel-body"><div class="activity-list" id="recentActivities"></div></div></div>
+          <div id="managerPrivatePanel" class="panel" style="margin-top:15px"><div class="panel-head"><h3>Kişisel izin ve mesai kayıtlarım</h3><span class="tag" id="managerPrivateMonth"></span></div><div class="panel-body"><div class="notice" id="managerPrivateNotice">Bu bölüm kişisel yönetici kayıtlarını gösterir.</div><div class="field hidden" id="managerPrivateTargetWrap" style="margin:12px 0"><label for="managerPrivateTarget">İzin / mesai kaydı girilecek yönetici</label><select id="managerPrivateTarget"></select></div><div id="managerPrivateDetails" class="detail-list"></div><h4 class="section-title" style="margin-top:18px" id="managerPrivateEditHeading">Kişisel kayıt güncelleme</h4><form id="managerPrivateForm"><div class="form-grid"><div class="field"><label for="managerPrivateDate">İşlem tarihi</label><input id="managerPrivateDate" type="date" required></div><div class="field"><label for="managerPrivateType">İşlem</label><select id="managerPrivateType" required><option value="annualAdd">Yıllık izin ekle (+ gün)</option><option value="annual">Yıllık izin kullan (- gün)</option><option value="compAdd">Serbesti ekle (+ gün)</option><option value="comp">Serbesti kullan (- gün)</option><option value="excuse">Mazeret izni (+ gün)</option><option value="excuseRemove">Mazeret izni kaydı düş (- gün)</option><option value="unpaid">Ücretsiz izin (+ gün)</option><option value="unpaidRemove">Ücretsiz izin kaydı düş (- gün)</option><option value="weekend">Hafta tatili mesaisi (+ gün)</option><option value="weekendRemove">Hafta tatili mesaisi düş (- gün)</option><option value="overtime">Mesai saati ekle (+ saat)</option><option value="overtimeRemove">Mesai saati düş (- saat)</option><option value="annualSet">Yıllık izin bakiyesini ayarla</option><option value="compSet">Serbesti bakiyesini ayarla</option></select></div><div class="field"><label for="managerPrivateAmount">Miktar (gün / saat)</label><input id="managerPrivateAmount" type="number" min="0.25" step="0.25" value="1" required></div><div class="field"><label for="managerPrivateNote">Açıklama (isteğe bağlı)</label><input id="managerPrivateNote" placeholder="Kişisel not"></div></div><div class="form-actions"><button type="submit" class="primary" id="managerPrivateSubmit">Kişisel kaydı güncelle</button></div></form><h4 class="section-title" style="margin-top:18px" id="managerPrivateHistoryHeading">Seçili yönetici hareket geçmişi</h4><div id="managerPrivateActivities" class="activity-list"></div></div></div>
+        </div>
+        <div id="employeeDashboard" class="hidden">
+          <div class="notice">Her başlığa tıklayarak güncel gün sayını veya mesai saatini görüntüleyebilirsin. Bilgiler, giriş yapan hesabın erişebildiği Supabase kayıtlarından gelir.</div>
+          <div class="panel"><div class="panel-head"><h3>İzin ve mesai bilgilerim</h3><span class="tag">Personel</span></div><div class="panel-body"><div id="employeeQuickItems" class="detail-list"></div><div class="tiny muted" style="margin-top:12px">Gösterilen ay: <span id="employeeMonthTag"></span></div></div></div>
+          <div class="panel"><div class="panel-head"><h3>Son hareketlerim</h3></div><div class="panel-body"><div id="employeeQuickActivities" class="activity-list"></div></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-staff">
+        <div class="page-heading"><div><div class="eyebrow">Personel kayıtları</div><h1>Personel Yönetimi</h1><p>Yeni personel ekle ve takip değerlerini düzenle.</p></div></div>
+        <div class="grid2">
+          <div class="panel"><div class="panel-head"><h3 id="staffFormTitle">Yeni personel kaydı</h3><span class="tag purple">Yönetici işlemi</span></div><div class="panel-body">
+            <form id="staffForm"><input type="hidden" id="editStaffId"><div class="form-grid">
+              <div class="field"><label for="staffName">Ad soyad *</label><input id="staffName" required placeholder="Ad Soyad"></div>
+              <input id="staffTitle" type="hidden" value="Personel">
+              <div class="field"><label for="annualBalance">Kalan yıllık izin (gün)</label><input id="annualBalance" type="number" min="0" step="0.5" value="0"></div>
+              <div class="field"><label for="compBalance">Kalan serbesti (gün)</label><input id="compBalance" type="number" min="0" step="0.5" value="0"></div>
+              <div class="field"><label for="excuseUsed">Mazeret izni kullanılan (gün)</label><input id="excuseUsed" type="number" min="0" step="0.5" value="0"></div>
+              <div class="field"><label for="unpaidUsed">Ücretsiz izin kullanılan (gün)</label><input id="unpaidUsed" type="number" min="0" step="0.5" value="0"></div>
+              <div class="field"><label for="weekendCount">Bu ay hafta tatili mesaisi (gün)</label><input id="weekendCount" type="number" min="0" step="1" value="0"></div>
+              <div class="field"><label for="overtimeHours">Bu ay mesai (saat)</label><input id="overtimeHours" type="number" min="0" step="0.25" value="0"></div>
+              <div class="field full"><label for="staffPassword">Personel giriş şifresi</label><input id="staffPassword" type="password" autocomplete="new-password" placeholder="Yeni personel için şifre belirle"></div>
+            </div><div class="form-actions"><button class="primary" type="submit">Kaydı Kaydet</button><button type="button" id="clearStaffForm">Temizle</button></div><div class="tiny muted" style="margin-top:10px">Yeni kayıtlar burada açılır. Gerçek kullanıcı adı ve şifre, Supabase bağlantısı kurulurken yönetici tarafından tanımlanacak.</div></form>
+          </div></div>
+          <div class="panel"><div class="panel-head"><h3>Başlangıç personel listesi</h3><span class="tag" id="staffCountTag">13 kişi</span></div><div class="panel-body"><input id="staffSearch" placeholder="Personel adına göre ara..." style="margin-bottom:12px"><div id="staffCards" class="activity-list"></div></div></div>
+        </div>
+        <div class="panel hidden" id="accountProvisionPanel" style="margin-top:15px"><div class="panel-head"><h3>Başlangıç kullanıcı hesapları</h3><span class="tag">Yalnızca ana yönetici</span></div><div class="panel-body"><div class="notice">Bu listede hesabı henüz açılmamış yöneticilere ve personele şifre belirleyebilirsin. Mevcut hesaba yeni şifre girersen şifresi sıfırlanır. Şifreler listeye veya HTML dosyasına yazılmaz.</div><div id="accountProvisionList" class="activity-list"></div></div></div>
+      </section>
+
+      <section class="page" id="page-update">
+        <div class="page-heading"><div><div class="eyebrow">Günlük hareket girişi</div><h1>İzin / Mesai Güncelle</h1><p>İzin ve mesai değerlerini ekleyebilir, düşürebilir veya bakiyeyi belirlediğin değere ayarlayabilirsin. Her işlem geçmişe kaydedilir.</p></div></div>
+        <div class="panel"><div class="panel-head"><h3>Yeni günlük işlem</h3><span class="tag purple">Yalnızca yönetici</span></div><div class="panel-body"><div class="notice">İzin kullanımında kalan yıllık izin/serbesti azalır. Mazeret ve ücretsiz izin kullanılan günlere eklenir. Mesai kayıtları içinde bulunduğun aya eklenir.</div>
+          <form id="activityForm"><div class="form-grid">
+            <div class="field"><label for="activityStaff">Personel *</label><select id="activityStaff" required></select></div>
+            <div class="field"><label for="activityDate">İşlem tarihi *</label><input id="activityDate" type="date" required></div>
+            <div class="field"><label for="activityType">İşlem türü *</label><select id="activityType" required><option value="annualAdd">Yıllık izin ekle (+ gün)</option><option value="annual">Yıllık izin kullanıldı / düş (- gün)</option><option value="compAdd">Serbesti ekle (+ gün)</option><option value="comp">Serbesti kullanıldı / düş (- gün)</option><option value="excuse">Mazeret izni kullanıldı (+ gün)</option><option value="excuseRemove">Mazeret izni kaydını düş (- gün)</option><option value="unpaid">Ücretsiz izin kullanıldı (+ gün)</option><option value="unpaidRemove">Ücretsiz izin kaydını düş (- gün)</option><option value="weekend">Hafta tatili mesaisi ekle (+ gün)</option><option value="weekendRemove">Hafta tatili mesaisini düş (- gün)</option><option value="overtime">Fazla mesai saati ekle (+ saat)</option><option value="overtimeRemove">Fazla mesai saatini düş (- saat)</option><option value="annualSet">Yıllık izin bakiyesini belirle (mevcut değere ayarla)</option><option value="compSet">Serbesti bakiyesini belirle (mevcut değere ayarla)</option></select></div>
+            <div class="field"><label for="activityAmount">Miktar (gün / saat) *</label><input id="activityAmount" type="number" min="0.25" step="0.25" value="1" required></div>
+            <div class="field full"><label for="activityNote">Açıklama / not</label><textarea id="activityNote" placeholder="Örn. Hafta sonu saha çalışması, izin onay bilgisi..."></textarea></div>
+          </div><div class="form-actions"><button class="primary" type="submit">Günlük Kaydı Ekle</button><button type="reset" id="activityReset">Temizle</button></div></form>
+        </div></div>
+      </section>
+
+      <section class="page" id="page-activity">
+        <div class="page-heading"><div><div class="eyebrow">İşlem günlüğü</div><h1>Günlük Kayıt Geçmişi</h1><p>Kaydedilen izin ve mesai hareketlerini tarih sırasıyla kontrol et.</p></div><button id="exportCsv" class="secondary">CSV dışa aktar</button></div>
+        <div class="panel"><div class="panel-body"><div class="toolbar"><input id="activitySearch" class="grow" placeholder="Personel, işlem türü veya açıklamada ara"><input id="activityMonth" type="month" style="max-width:180px"></div><div class="table-wrap"><table><thead><tr><th>Tarih</th><th>Personel</th><th>İşlem</th><th>Miktar</th><th>Açıklama</th><th>Kaydı giren</th></tr></thead><tbody id="activityRows"></tbody></table></div><div id="activityEmpty" class="empty hidden">Henüz günlük işlem yok.</div></div></div>
+      </section>
+
+             <section class="page" id="page-mine">
+         <div class="page-heading"><div><div class="eyebrow">Kişisel panel</div><h1>İzin ve Mesai Bilgilerim</h1><p>Yalnızca giriş yapan personele ait sayılar gösterilir.</p></div></div>
+         <div class="notice">Her başlığa ayrı ayrı tıkla; yıllık izin, serbesti, mazeret, ücretsiz izin ve aylık mesai toplamı hemen altında görünür.</div>
+         <div class="panel"><div class="panel-head"><h3>İzin ve mesai ayrıntıları</h3><span class="tag" id="mineMonthTag"></span></div><div class="panel-body"><div class="tiny muted" style="margin-bottom:12px">Aşağıdaki başlıklara ayrı ayrı tıkla; ilgili bakiyen veya aylık toplamın hemen altında açılır.</div><div id="mineDetailList" class="detail-list"></div><div style="margin-top:17px"><h4 class="section-title">Son hareketler</h4><div id="mineActivityList" class="activity-list"></div></div></div></div>
+       </section>
+    </main>
+  </div>
+</div>
+<div class="footer-credit">TASARIM, DİZAYN VE UYGULAMA GELİŞTİRİCİSİ · <strong>SUAT DURDU</strong></div>
+<div id="toast" style="position:fixed;right:18px;bottom:48px;z-index:99;max-width:340px;display:none;padding:12px 15px;border:1px solid #56efff7a;border-radius:12px;background:#171035;color:#f7f3ff;box-shadow:var(--shadow);font-size:12px"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+const STORAGE_KEY='etutPersonelTakipPrototype_v2';
+const ADMIN_NAME='Suat Durdu';
+// Yerel prototip için dört ayrı yönetici hesabı. Gerçek kullanımda bunlar Supabase Auth hesaplarına taşınmalıdır.
+const MANAGER_ACCOUNTS=[
+ {id:'admin',name:'Suat Durdu',title:'',email:'yonetici04@etutproje.example.com'},
+ {id:'p001',name:'İsmail Şimşek',title:'',email:'yonetici01@etutproje.example.com'},
+ {id:'p002',name:'Derya Şimşek',title:'',email:'yonetici02@etutproje.example.com'},
+ {id:'p003',name:'Metehan Yazıcıoğlu',title:'',email:'yonetici03@etutproje.example.com'}
+];
+const MANAGER_IDS=new Set(MANAGER_ACCOUNTS.filter(m=>m.id!=='admin').map(m=>m.id));
+const DEMO_PASSWORDS={};
+let currentActorName=ADMIN_NAME;
+let currentLoginPresentation='admin';
+const initialStaff=[
+ {id:'p004',loginEmail:'personel01@etutproje.example.com',name:'Ali Yazıcıoğlu',title:'Harita Teknikeri',roleLabel:'Personel'},
+ {id:'p005',loginEmail:'personel02@etutproje.example.com',name:'Mehmet Gökay Yınanç',title:'Harita Teknikeri',roleLabel:'Personel'},
+ {id:'p006',loginEmail:'personel03@etutproje.example.com',name:'Mustafa Saylavcı',title:'Harita Teknikeri',roleLabel:'Personel'},
+ {id:'p007',loginEmail:'personel04@etutproje.example.com',name:'Serkan Yıldırım',title:'Harita Teknikeri',roleLabel:'Personel'},
+ {id:'p008',loginEmail:'personel05@etutproje.example.com',name:'Veli Türk',title:'Topoğraf',roleLabel:'Personel'},
+ {id:'p009',loginEmail:'personel06@etutproje.example.com',name:'Hüseyin Bozoğlu',title:'Topoğraf',roleLabel:'Personel'},
+ {id:'p010',loginEmail:'personel07@etutproje.example.com',name:'Ramazan Erdoğan',title:'Şenör',roleLabel:'Personel'},
+ {id:'p011',loginEmail:'personel08@etutproje.example.com',name:'Eyüp Gök',title:'Şenör',roleLabel:'Personel'},
+ {id:'p012',loginEmail:'personel09@etutproje.example.com',name:'Hakan Arslaner',title:'Şenör',roleLabel:'Personel'},
+ {id:'p013',loginEmail:'personel10@etutproje.example.com',name:'Furkan Kalkan',title:'Şenör',roleLabel:'Personel'}
+];
+const activityNames={annualAdd:'Yıllık izin eklendi',annual:'Yıllık izin kullanıldı / düşüldü',compAdd:'Serbesti eklendi',comp:'Serbesti kullanıldı / düşüldü',excuse:'Mazeret izni kullanıldı',excuseRemove:'Mazeret izni kaydı düşüldü',unpaid:'Ücretsiz izin kullanıldı',unpaidRemove:'Ücretsiz izin kaydı düşüldü',weekend:'Hafta tatili mesaisi eklendi',weekendRemove:'Hafta tatili mesaisi düşüldü',overtime:'Fazla mesai saati eklendi',overtimeRemove:'Fazla mesai saati düşüldü',annualSet:'Yıllık izin bakiyesi ayarlandı',compSet:'Serbesti bakiyesi ayarlandı'};
+let db=loadDb(),currentRole='admin',currentUserId='admin',selectedLoginRole='admin';
+const SUPABASE_URL='https://wvdqxvfiohjdedneyjph.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_KveNkkpEgL6Yoks4-KWAyA_2q8Tu_oJ';
+let supabaseClient=null, loginRoster=[], currentAccountRole=null, currentAuthUserId=null;
+let remoteMode=false, remoteSyncReady=false, remoteSyncQueue=Promise.resolve();
+let remoteProfileSnapshot={}, remoteActivityIds=new Set(), remoteVisibleIds=new Set();
+
+function createPrivateManagerState(){return {annualBalance:0,compBalance:0,excuseUsed:0,unpaidUsed:0,monthStats:{},activities:[]};}
+function managerIdByLegacyRecord(record){
+ if(!record)return null;
+ if(MANAGER_ACCOUNTS.some(m=>m.id===record.id))return record.id;
+ const byName=MANAGER_ACCOUNTS.find(m=>m.name===record.name);
+ return byName?byName.id:null;
+}
+function loadDb(){
+ try{
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(raw){
+   const x=JSON.parse(raw);
+   if(x&&Array.isArray(x.staff)&&Array.isArray(x.activities)){
+    x.managerPrivate=x.managerPrivate&&typeof x.managerPrivate==='object'?x.managerPrivate:{};
+    MANAGER_ACCOUNTS.forEach(m=>{if(!x.managerPrivate[m.id])x.managerPrivate[m.id]=createPrivateManagerState();else{const st=x.managerPrivate[m.id];if(!st.monthStats)st.monthStats={};if(!Array.isArray(st.activities))st.activities=[];}});
+    // Move any manager profile data saved by older prototypes to that manager's private area.
+    const keptStaff=[];
+    for(const st of x.staff){
+     const managerId=managerIdByLegacyRecord(st);
+     if(managerId){const state=x.managerPrivate[managerId];state.annualBalance=number(st.annualBalance??state.annualBalance);state.compBalance=number(st.compBalance??state.compBalance);state.excuseUsed=number(st.excuseUsed??state.excuseUsed);state.unpaidUsed=number(st.unpaidUsed??state.unpaidUsed);state.monthStats=st.monthStats||state.monthStats||{};}
+     else keptStaff.push(st);
+    }
+    x.staff=keptStaff;
+    // Manager-owned entries are moved out of the shared activity list and are visible only to the matching login.
+    const keptActivities=[];
+    for(const a of x.activities){
+     const m=MANAGER_ACCOUNTS.find(ac=>ac.id===a.staffId||ac.name===a.staffName||ac.name===a.personName);
+     if(m){const list=x.managerPrivate[m.id].activities;if(!list.some(v=>v.id===a.id))list.push(a);}
+     else keptActivities.push(a);
+    }
+    x.activities=keptActivities;
+    x.staff=x.staff.filter(st=>!['p001','p002','p003'].includes(st.id)&&!['İsmail Şimşek','Derya Şimşek','Metehan Yazıcıoğlu'].includes(st.name));
+    return x;
+   }
+  }
+ }catch(e){console.warn('Yerel kayıtlar okunamadı:',e);}
+ return {staff:initialStaff.map(s=>({...s,annualBalance:0,compBalance:0,excuseUsed:0,unpaidUsed:0,monthStats:{}})),activities:[],managerPrivate:Object.fromEntries(MANAGER_ACCOUNTS.map(m=>[m.id,createPrivateManagerState()]))};
+}
+function saveDb(){
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){console.warn('Yerel önbellek yazılamadı',e);}
+ if(remoteMode && remoteSyncReady){
+   remoteSyncQueue=remoteSyncQueue.then(()=>syncDbToSupabase()).catch(err=>{
+     console.error('Supabase senkronizasyon hatası:',err);
+     toast('Supabase kayıt hatası: '+(err?.message||'Bağlantıyı kontrol edin.'));
+   });
+ }
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function todayIso(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function monthKey(date=todayIso()){return String(date).slice(0,7);}
+function monthLabel(date=new Date()){return date.toLocaleDateString('tr-TR',{month:'long',year:'numeric'});}
+function statsFor(staff,date=todayIso()){const month=monthKey(date);const ms=staff.monthStats?.[month]||{weekendCount:0,overtimeHours:0,excuseUsed:0,unpaidUsed:0};return {...ms};}
+function number(v){const n=Number(v);return Number.isFinite(n)?n:0;}
+function formatNum(v){return Number(v||0).toLocaleString('tr-TR',{maximumFractionDigits:2});}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',3200);}
+function getStaff(id){return db.staff.find(s=>s.id===id)||MANAGER_ACCOUNTS.find(m=>m.id===id)||null;}
+function getPrivateManagerState(id=currentUserId){
+ if(!db.managerPrivate)db.managerPrivate={};
+ if(!db.managerPrivate[id])db.managerPrivate[id]=createPrivateManagerState();
+ const account=MANAGER_ACCOUNTS.find(m=>m.id===id);
+ const state=db.managerPrivate[id];
+ return {...state,id,name:account?.name||currentActorName,title:'',activities:state.activities||[],monthStats:state.monthStats||{}};
+}
+function visibleStaff(){return currentRole==='admin'?db.staff:db.staff.filter(s=>s.id===currentUserId);}
+function roleSetup(role){
+ selectedLoginRole=role;
+ document.querySelectorAll('.role-card').forEach(el=>el.classList.toggle('selected',el.dataset.role===role));
+ const sel=document.getElementById('loginName');sel.innerHTML='';
+ let source=loginRoster.length ? loginRoster : [];
+ if(!source.length){
+   source=[...MANAGER_ACCOUNTS.map(m=>({id:m.id,full_name:m.name,account_role:m.id==='admin'?'owner_admin':'manager',login_email:m.email,has_account:false})),...initialStaff.map(p=>({id:p.id,full_name:p.name,account_role:'employee',login_email:p.loginEmail,has_account:false}))];
+ }
+ const visible=role==='admin'?source.filter(r=>r.account_role==='owner_admin'||r.account_role==='manager'):source.filter(r=>r.account_role==='employee');
+ document.querySelector('#loginNameWrap label').textContent=role==='admin'?'Yönetici hesabı':'Personel adı';
+ if(!visible.length)sel.add(new Option(role==='admin'?'Yönetici hesabı bulunamadı':'Personel bulunamadı',''));
+ visible.forEach(p=>sel.add(new Option(p.full_name,p.id)));
+ document.getElementById('loginPassword').value='';
+ document.getElementById('loginPassword').placeholder='Şifrenizi girin';
+ document.getElementById('loginError').style.display='none';
+}
+document.querySelectorAll('.role-card').forEach(b=>b.addEventListener('click',()=>roleSetup(b.dataset.role)));
+function localDemoPassword(){return '';}
+async function doPreviewLogin(){
+ const err=document.getElementById('loginError');
+ const showError=(msg)=>{err.textContent=msg;err.style.display='block';};
+ const password=document.getElementById('loginPassword').value;
+ const selectedId=document.getElementById('loginName').value;
+ const picked=loginRoster.find(r=>r.id===selectedId) || null;
+ let email=picked?.login_email;
+ if(!email){email=MANAGER_ACCOUNTS.find(m=>m.id===selectedId)?.email || initialStaff.find(p=>p.id===selectedId)?.loginEmail;}
+ if(!supabaseClient){showError('Supabase bağlantısı başlatılamadı. İnternet bağlantısını ve kurulum SQL dosyasını kontrol edin.');return;}
+ if(!selectedId || !email){showError('Lütfen listedeki hesabı seçin. Supabase personel listesi henüz yüklenmemiş olabilir.');return;}
+ if(!password){showError('Lütfen şifrenizi girin.');document.getElementById('loginPassword').focus();return;}
+ const btn=document.getElementById('loginSubmit');btn.disabled=true;btn.innerHTML='Kontrol ediliyor…';
+ try{
+   const {data:authData,error:authError}=await supabaseClient.auth.signInWithPassword({email,password});
+   if(authError || !authData?.user){showError('Giriş başarısız. Şifreyi ve Supabase Auth hesabının kurulduğunu kontrol edin.');return;}
+   const {data:profile,error:profileError}=await supabaseClient.from('etut_staff')
+     .select('id,login_email,full_name,account_role,annual_balance,comp_balance,excuse_used,unpaid_used,month_stats,active,updated_at')
+     .eq('id',selectedId).eq('active',true).maybeSingle();
+   if(profileError || !profile){
+     await supabaseClient.auth.signOut();
+     showError('Bu hesap personel profiline eşleştirilmemiş. Supabase SQL dosyası 02 ile eşleştirmeyi yapın veya ana yöneticiden hesabı kurmasını isteyin.');return;
+   }
+   const needsAdmin=profile.account_role==='owner_admin'||profile.account_role==='manager';
+   if((selectedLoginRole==='admin'&&!needsAdmin)||(selectedLoginRole==='employee'&&needsAdmin)){
+     await supabaseClient.auth.signOut();
+     showError('Bu hesabı giriş ekranındaki doğru bölümden seçin.');return;
+   }
+   currentRole=profile.account_role==='employee'?'employee':'admin';
+   currentAccountRole=profile.account_role;
+   currentUserId=profile.id;
+   currentAuthUserId=authData.user.id;
+   currentActorName=profile.full_name;
+   currentLoginPresentation=currentRole;
+   await loadRemoteDb(profile);
+   remoteMode=true;remoteSyncReady=true;
+   localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
+   document.getElementById('loginScreen').classList.add('hidden');
+   document.getElementById('appScreen').classList.remove('hidden');
+   document.getElementById('headerName').textContent=profile.full_name;
+   document.getElementById('headerRole').textContent=profile.account_role==='owner_admin'?'Ana Yönetici':profile.account_role==='manager'?'Yönetici':'Personel';
+   document.getElementById('headerAvatar').textContent=profile.full_name.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
+   document.querySelector('.status-badge').textContent='SUPABASE · ORTAK KAYIT';
+   document.querySelector('.side-tip').innerHTML='<strong>Bulut bağlantısı açık</strong><br>Kayıtlar Supabase üzerinde tutulur. Erişim yetkileri hesap rolüne göre sunucu tarafında uygulanır.';
+   configureNav();renderAll();err.style.display='none';
+ }catch(ex){console.error(ex);showError(ex?.message||'Bağlantı sırasında beklenmeyen hata oluştu.');}
+ finally{btn.disabled=false;btn.innerHTML='Giriş Yap <span aria-hidden="true">→</span>';}
+}
+document.getElementById('loginForm').addEventListener('submit',e=>{e.preventDefault();doPreviewLogin();});
+document.getElementById('loginSubmit').addEventListener('click',doPreviewLogin);
+document.getElementById('loginForm').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doPreviewLogin();}});
+document.getElementById('logoutBtn').addEventListener('click',async()=>{if(supabaseClient)await supabaseClient.auth.signOut();remoteSyncReady=false;remoteMode=false;currentRole='admin';currentAccountRole=null;currentUserId='admin';currentAuthUserId=null;currentActorName=ADMIN_NAME;currentLoginPresentation='admin';document.getElementById('appScreen').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginPassword').value='';roleSetup('admin');});
+function configureNav(){const items=currentRole==='admin'?[['dashboard','▦','Genel Bakış'],['staff','♙','Personel Yönetimi'],['update','＋','Günlük Güncelleme'],['activity','◷','Kayıt Geçmişi']]:[['dashboard','▦','Bilgilerim'],['mine','◷','İzin / Mesai Detayım']];document.getElementById('navMenu').innerHTML=items.map((i,n)=>`<button type="button" data-page="${i[0]}" class="${n===0?'active':''}"><span class="ico">${i[1]}</span>${i[2]}</button>`).join('');document.querySelectorAll('#navMenu button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>showPage(b.dataset.goto));document.getElementById('adminDashboard').classList.toggle('hidden',currentRole!=='admin');document.getElementById('employeeDashboard').classList.toggle('hidden',currentRole!=='employee');if(currentRole==='employee'){document.getElementById('dashEyebrow').textContent='Personel ekranı';document.getElementById('dashTitle').textContent='İzin ve Mesai Özeti';document.getElementById('dashSub').textContent='Kendi izin bakiyeni ve aylık mesai bilgilerini görüntüle.';}else{document.getElementById('dashEyebrow').textContent='Yönetim merkezi';document.getElementById('dashTitle').textContent='Personel Durum Paneli';document.getElementById('dashSub').textContent=currentAccountRole==='owner_admin'?'Tüm izin ve mesai kayıtlarını görüntüle; günlük güncellemeleri ve hesap yönetimini yap.':'Personel kayıtlarını yönet; kendi kişisel izin ve mesai ayrıntılarını gizlilik içinde görüntüle.';}document.querySelectorAll('#navMenu [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page==='dashboard'));}
+function showPage(name){if(currentRole==='employee'&&!['dashboard','mine'].includes(name)){toast('Bu bölüm yalnızca yöneticiye açıktır.');return;}document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+name));document.querySelectorAll('#navMenu button').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='staff')renderStaffAdmin();if(name==='update')populateActivityStaff();if(name==='activity')renderActivities();if(name==='mine')renderMine();if(name==='dashboard')renderDashboard();window.scrollTo({top:0,behavior:'smooth'});}
+function renderAll(){document.getElementById('monthLabel').textContent=monthLabel();document.getElementById('activityDate').value=todayIso();document.getElementById('activityMonth').value=monthKey();fillTitleFilter();populateActivityStaff();renderDashboard();renderStaffAdmin();renderActivities();renderMine();}
+function fillTitleFilter(){const sel=document.getElementById('dashboardTitleFilter');const old=sel.value;const titles=[...new Set(db.staff.map(s=>s.title).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr'));sel.innerHTML='<option value="">Tüm kayıtlar</option>'+titles.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');sel.value=old;}
+function visibleManagerIdsForActor(){
+ if(currentAccountRole==='owner_admin') return MANAGER_ACCOUNTS.map(m=>m.id);
+ if(currentAccountRole==='manager' && MANAGER_ACCOUNTS.some(m=>m.id===currentUserId)) return [currentUserId];
+ return [];
+}
+function managerRecordForDisplay(id){
+ const manager=MANAGER_ACCOUNTS.find(m=>m.id===id); if(!manager)return null;
+ const st=getPrivateManagerState(id);
+ return {...manager,...st,id:manager.id,name:manager.name,title:'',roleLabel:manager.id==='admin'?'Ana Yönetici':'Yönetici',accountRole:manager.id==='admin'?'owner_admin':'manager'};
+}
+function visibleTrackedRecords(){
+ const managerRows=visibleManagerIdsForActor().map(managerRecordForDisplay).filter(Boolean);
+ return [...managerRows,...db.staff];
+}
+function visibleActivitiesForActor(){
+ const out=[...(db.activities||[])];
+ for(const id of visibleManagerIdsForActor()) out.push(...(db.managerPrivate?.[id]?.activities||[]));
+ return out;
+}
+function renderDashboard(){
+ const month=monthKey(); document.getElementById('monthLabel').textContent=monthLabel();
+ if(currentRole==='employee'){
+   const s=getStaff(currentUserId); if(!s)return;
+   document.getElementById('employeeMonthTag').textContent=monthLabel();
+   renderPersonalDetails('employeeQuickItems',s);
+   const myActs=db.activities.filter(a=>a.staffId===s.id).slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,5);
+   document.getElementById('employeeQuickActivities').innerHTML=myActs.length?myActs.map(activityCard).join(''):'<div class="empty">Henüz hareket kaydı yok.</div>';
+   return;
+ }
+ const records=visibleTrackedRecords();
+ document.getElementById('staffCountMetric').textContent=records.length;
+ document.getElementById('annualTotalMetric').textContent=formatNum(records.reduce((a,s)=>a+number(s.annualBalance),0));
+ document.getElementById('compTotalMetric').textContent=formatNum(records.reduce((a,s)=>a+number(s.compBalance),0));
+ document.getElementById('overtimeMetric').textContent=formatNum(records.reduce((a,s)=>a+number(statsFor(s).overtimeHours),0));
+ const q=(document.getElementById('dashboardSearch').value||'').toLocaleLowerCase('tr');
+ const rows=records.filter(s=>s.name.toLocaleLowerCase('tr').includes(q));
+ document.getElementById('dashboardRows').innerHTML=rows.length?rows.map(s=>{
+   const ms=statsFor(s); const isManager=MANAGER_ACCOUNTS.some(m=>m.id===s.id);
+   let controls='';
+   if(isManager && currentAccountRole==='owner_admin') controls=`<button data-fast-update="${esc(s.id)}">İzin / mesai gir</button>`;
+   else if(!isManager) controls=`<button data-edit-staff-record="${esc(s.id)}">Düzenle</button><button data-fast-update="${esc(s.id)}">Güncelle</button>`;
+   else controls='<span class="tiny muted">Kişisel kayıtlarım</span>';
+   return `<tr><td><span class="person-name">${esc(s.name)}</span><small class="muted">${isManager?(s.id==='admin'?'Ana Yönetici':'Yönetici'):'Personel'}</small></td><td><span class="tag">${formatNum(s.annualBalance)} gün</span></td><td><span class="tag purple">${formatNum(s.compBalance)} gün</span></td><td>${formatNum(s.excuseUsed)} gün</td><td>${formatNum(s.unpaidUsed)} gün</td><td>${formatNum(ms.weekendCount)} gün</td><td><span class="tag pink">${formatNum(ms.overtimeHours)} saat</span></td><td><div class="row-actions">${controls}</div></td></tr>`;
+ }).join(''):'<tr><td colspan="8" class="empty">Aramaya uygun personel/yönetici yok.</td></tr>';
+ document.querySelectorAll('[data-edit-staff-record]').forEach(b=>b.onclick=()=>{showPage('staff');editStaff(b.dataset.editStaffRecord)});
+ document.querySelectorAll('[data-fast-update]').forEach(b=>b.onclick=()=>{showPage('update');document.getElementById('activityStaff').value=b.dataset.fastUpdate;});
+ const recent=visibleActivitiesForActor().slice().sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,5);
+ document.getElementById('recentActivities').innerHTML=recent.length?recent.map(activityCard).join(''):'<div class="empty">Henüz günlük güncelleme yapılmadı.</div>';
+ renderManagerPrivatePanel();
+}
+function activityCard(a){const s=getStaff(a.staffId);return `<div class="activity"><div><b>${esc(a.typeLabel)}</b><small>${esc(s?.name||'Personel silinmiş')} · ${esc(a.date)}${a.note?' · '+esc(a.note):''}</small></div><div class="delta">${esc(a.amountLabel)}</div></div>`;}
+
+function renderPersonalDetails(containerId,s){
+ const el=document.getElementById(containerId);if(!el||!s)return;
+ const ms=statsFor(s);const items=[
+  ['annual','🗓️','Yıllık izin','Kalan yıllık izin',formatNum(s.annualBalance)+' gün'],
+  ['comp','✨','Serbesti','Kalan serbesti',formatNum(s.compBalance)+' gün'],
+  ['excuse','💠','Mazeret izni','Kullanılan toplam mazeret izni',formatNum(s.excuseUsed)+' gün'],
+  ['unpaid','📋','Ücretsiz izin','Kullanılan toplam ücretsiz izin',formatNum(s.unpaidUsed)+' gün'],
+  ['weekend','🧭','Hafta tatili mesaisi','Bu ay yapılan hafta tatili mesaisi',formatNum(ms.weekendCount)+' gün'],
+  ['overtime','⏱️','Mesai saati','Bu ay toplam mesai',formatNum(ms.overtimeHours)+' saat']
+ ];
+ el.innerHTML=items.map(([key,ico,label,desc,value])=>`<div class="detail-item"><button type="button" class="detail-toggle" data-detail-key="${key}" aria-expanded="false"><span class="detail-label"><span class="detail-ico">${ico}</span>${label}</span><span class="detail-action">Göster ＋</span></button><div class="detail-value hidden" data-detail-value="${key}">${value}<small>${desc}</small></div></div>`).join('');
+ el.querySelectorAll('[data-detail-key]').forEach(btn=>btn.addEventListener('click',()=>{const value=el.querySelector(`[data-detail-value="${btn.dataset.detailKey}"]`);const open=value.classList.contains('hidden');value.classList.toggle('hidden');btn.setAttribute('aria-expanded',String(open));btn.querySelector('.detail-action').textContent=open?'Gizle −':'Göster ＋';}));
+}
+
+function renderStaffAdmin(){
+ if(currentRole!=='admin')return;
+ const query=(document.getElementById('staffSearch').value||'').toLocaleLowerCase('tr');
+ const managerRows=visibleManagerIdsForActor().map(managerRecordForDisplay).filter(Boolean).filter(s=>s.name.toLocaleLowerCase('tr').includes(query));
+ const staffRows=db.staff.filter(s=>s.name.toLocaleLowerCase('tr').includes(query));
+ document.getElementById('staffCountTag').textContent=(managerRows.length+staffRows.length)+' kişi';
+ const managerCards=managerRows.map(s=>`<div class="activity"><div><b>${esc(s.name)}</b><small>${s.id==='admin'?'Ana Yönetici':'Yönetici'} · Yıllık izin: ${formatNum(s.annualBalance)} gün · Serbesti: ${formatNum(s.compBalance)} gün · Bu ay mesai: ${formatNum(statsFor(s).overtimeHours)} saat</small></div><div class="row-actions"><button type="button" data-manager-fast-update="${esc(s.id)}">İzin / mesai güncelle</button></div></div>`).join('');
+ const staffCards=staffRows.map(s=>`<div class="activity"><div><b>${esc(s.name)}</b><small>Personel · Yıllık izin: ${formatNum(s.annualBalance)} gün · Serbesti: ${formatNum(s.compBalance)} gün</small></div><div class="row-actions"><button data-edit-card="${esc(s.id)}">Düzenle</button><button class="danger" data-delete-staff="${esc(s.id)}">Sil</button></div></div>`).join('');
+ document.getElementById('staffCards').innerHTML=(managerCards+staffCards)||'<div class="empty">Kayıt bulunamadı.</div>';
+ document.querySelectorAll('[data-edit-card]').forEach(b=>b.onclick=()=>editStaff(b.dataset.editCard));
+ document.querySelectorAll('[data-delete-staff]').forEach(b=>b.onclick=()=>deleteStaff(b.dataset.deleteStaff));
+ document.querySelectorAll('[data-manager-fast-update]').forEach(b=>b.onclick=()=>{showPage('update');document.getElementById('activityStaff').value=b.dataset.managerFastUpdate;});
+ populateActivityStaff();
+}
+function editStaff(id){const s=getStaff(id);if(!s)return;document.getElementById('editStaffId').value=s.id;document.getElementById('staffPassword').value='';document.getElementById('staffPassword').placeholder='Değiştirmek için yeni şifre girin';document.getElementById('staffName').value=s.name;document.getElementById('staffTitle').value=s.title;document.getElementById('annualBalance').value=s.annualBalance;document.getElementById('compBalance').value=s.compBalance;document.getElementById('excuseUsed').value=s.excuseUsed||0;document.getElementById('unpaidUsed').value=s.unpaidUsed||0;const ms=statsFor(s);document.getElementById('weekendCount').value=ms.weekendCount||0;document.getElementById('overtimeHours').value=ms.overtimeHours||0;document.getElementById('staffFormTitle').textContent='Personel kaydını düzenle';document.getElementById('staffName').focus();}
+function clearStaffForm(){document.getElementById('staffForm').reset();document.getElementById('staffPassword').value='';document.getElementById('staffPassword').placeholder='Yeni personel için şifre belirle';document.getElementById('editStaffId').value='';document.getElementById('annualBalance').value=0;document.getElementById('compBalance').value=0;document.getElementById('excuseUsed').value=0;document.getElementById('unpaidUsed').value=0;document.getElementById('weekendCount').value=0;document.getElementById('overtimeHours').value=0;document.getElementById('staffFormTitle').textContent='Yeni personel kaydı';}
+document.getElementById('clearStaffForm').addEventListener('click',clearStaffForm);
+document.getElementById('staffForm').addEventListener('submit',e=>{e.preventDefault();if(currentRole!=='admin')return;const id=document.getElementById('editStaffId').value;const name=document.getElementById('staffName').value.trim();const title='';const assignedPassword=document.getElementById('staffPassword').value;if(!name)return;if(!id&&!assignedPassword){toast('Yeni personel için bir giriş şifresi belirleyin.');document.getElementById('staffPassword').focus();return;}let s=id?getStaff(id):null;if(s){s.name=name;s.title='';if(assignedPassword)s.demoPassword=assignedPassword;s.annualBalance=number(document.getElementById('annualBalance').value);s.compBalance=number(document.getElementById('compBalance').value);s.excuseUsed=number(document.getElementById('excuseUsed').value);s.unpaidUsed=number(document.getElementById('unpaidUsed').value);const mk=monthKey();s.monthStats=s.monthStats||{};s.monthStats[mk]=s.monthStats[mk]||{weekendCount:0,overtimeHours:0,excuseUsed:0,unpaidUsed:0};Object.assign(s.monthStats[mk],{weekendCount:number(document.getElementById('weekendCount').value),overtimeHours:number(document.getElementById('overtimeHours').value)});s.updatedAt=todayIso();}else{const newId='p'+Date.now().toString(36);s={id:newId,name,title:'',roleLabel:'Personel',demoPassword:assignedPassword,annualBalance:number(document.getElementById('annualBalance').value),compBalance:number(document.getElementById('compBalance').value),excuseUsed:number(document.getElementById('excuseUsed').value),unpaidUsed:number(document.getElementById('unpaidUsed').value),monthStats:{[monthKey()]:{weekendCount:number(document.getElementById('weekendCount').value),overtimeHours:number(document.getElementById('overtimeHours').value),excuseUsed:0,unpaidUsed:0}},updatedAt:todayIso()};db.staff.push(s);}saveDb();clearStaffForm();renderAll();toast(id?'Personel kaydı güncellendi.':'Yeni personel eklendi.');});
+function deleteStaff(id){const s=getStaff(id);if(!s)return;if(!confirm(`${s.name} personel kaydını silmek istiyor musun? İlgili hareket geçmişi saklanır.`))return;db.staff=db.staff.filter(x=>x.id!==id);saveDb();renderAll();toast('Personel kaydı silindi.');}
+function populateActivityStaff(){
+ const sel=document.getElementById('activityStaff'); if(!sel)return;
+ const old=sel.value;
+ const choices=[...db.staff.map(s=>({id:s.id,name:s.name,kind:'Personel'}))];
+ if(currentAccountRole==='owner_admin'){
+   choices.unshift(...MANAGER_ACCOUNTS.map(m=>({id:m.id,name:m.name,kind:m.id==='admin'?'Ana Yönetici':'Yönetici'})));
+ }
+ sel.innerHTML='<option value="">Personel / yönetici seç</option>'+choices.map(s=>`<option value="${esc(s.id)}">${esc(s.name)} · ${esc(s.kind)}</option>`).join('');
+ if(choices.some(s=>s.id===old))sel.value=old;
+}
+document.getElementById('activityForm').addEventListener('submit',e=>{
+ e.preventDefault(); if(currentRole!=='admin'){toast('Bu işlem yalnızca yöneticiye açık.');return;}
+ const staffId=document.getElementById('activityStaff').value;
+ const manager=MANAGER_ACCOUNTS.find(m=>m.id===staffId)||null;
+ if(manager && currentAccountRole!=='owner_admin'){toast('Yöneticilerin izin ve mesai kayıtlarını yalnızca ana yönetici güncelleyebilir.');return;}
+ let s;
+ if(manager){
+   if(!db.managerPrivate[staffId])db.managerPrivate[staffId]=createPrivateManagerState();
+   s=db.managerPrivate[staffId]; s.id=staffId; s.name=manager.name; s.title='';
+ } else s=db.staff.find(x=>x.id===staffId)||null;
+ const date=document.getElementById('activityDate').value,type=document.getElementById('activityType').value,amount=number(document.getElementById('activityAmount').value),note=document.getElementById('activityNote').value.trim();
+ if(!s||!date||amount<=0){toast('Personel/yönetici, tarih ve pozitif miktar alanlarını kontrol et.');return;}
+ const mk=monthKey(date); s.monthStats=s.monthStats||{};s.monthStats[mk]=s.monthStats[mk]||{weekendCount:0,overtimeHours:0,excuseUsed:0,unpaidUsed:0}; const ms=s.monthStats[mk];let amountLabel='';
+ if(type==='annualAdd'){s.annualBalance=number(s.annualBalance)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='annual'){if(number(s.annualBalance)<amount){toast('Kalan yıllık izin bu kadar düşürülemez.');return;}s.annualBalance=number(s.annualBalance)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='compAdd'){s.compBalance=number(s.compBalance)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='comp'){if(number(s.compBalance)<amount){toast('Kalan serbesti bu kadar düşürülemez.');return;}s.compBalance=number(s.compBalance)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='excuse'){s.excuseUsed=number(s.excuseUsed)+amount;ms.excuseUsed=number(ms.excuseUsed)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='excuseRemove'){if(number(s.excuseUsed)<amount||number(ms.excuseUsed)<amount){toast('Bu ayın mazeret izni kaydından bu miktar düşürülemez.');return;}s.excuseUsed=number(s.excuseUsed)-amount;ms.excuseUsed=number(ms.excuseUsed)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='unpaid'){s.unpaidUsed=number(s.unpaidUsed)+amount;ms.unpaidUsed=number(ms.unpaidUsed)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='unpaidRemove'){if(number(s.unpaidUsed)<amount||number(ms.unpaidUsed)<amount){toast('Bu ayın ücretsiz izin kaydından bu miktar düşürülemez.');return;}s.unpaidUsed=number(s.unpaidUsed)-amount;ms.unpaidUsed=number(ms.unpaidUsed)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='weekend'){ms.weekendCount=number(ms.weekendCount)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='weekendRemove'){if(number(ms.weekendCount)<amount){toast('Bu ayın hafta tatili mesaisi bu kadar düşürülemez.');return;}ms.weekendCount=number(ms.weekendCount)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='overtime'){ms.overtimeHours=number(ms.overtimeHours)+amount;amountLabel='+'+amount+' saat';}
+ else if(type==='overtimeRemove'){if(number(ms.overtimeHours)<amount){toast('Bu ayın mesai saati bu kadar düşürülemez.');return;}ms.overtimeHours=number(ms.overtimeHours)-amount;amountLabel='−'+amount+' saat';}
+ else if(type==='annualSet'){s.annualBalance=amount;amountLabel='Yeni bakiye: '+amount+' gün';}
+ else if(type==='compSet'){s.compBalance=amount;amountLabel='Yeni bakiye: '+amount+' gün';}
+ else {toast('İşlem türü tanınmadı.');return;}
+ s.updatedAt=date;
+ const activity={id:(manager?'ma':'a')+Date.now().toString(36),staffId,date,type,typeLabel:activityNames[type],amount,amountLabel,note,createdAt:new Date().toISOString(),enteredBy:currentActorName};
+ if(manager){s.activities=s.activities||[];s.activities.push({...activity,staffName:manager.name});}
+ else db.activities.push(activity);
+ saveDb();document.getElementById('activityNote').value='';document.getElementById('activityAmount').value='1';renderAll();toast(`${s.name} için günlük güncelleme kaydedildi.`);
+});
+function renderManagerPrivatePanel(){
+ const panel=document.getElementById('managerPrivatePanel');if(!panel)return;
+ if(currentRole!=='admin'){panel.classList.add('hidden');return;}
+ panel.classList.remove('hidden');
+ const owner=currentAccountRole==='owner_admin';
+ const wrap=document.getElementById('managerPrivateTargetWrap');
+ const select=document.getElementById('managerPrivateTarget');
+ if(wrap)wrap.classList.toggle('hidden',!owner);
+ if(owner && select){
+   const existing=select.value;
+   select.innerHTML=MANAGER_ACCOUNTS.map(m=>`<option value="${esc(m.id)}">${esc(m.name)}${m.id==='admin'?' · Ana Yönetici':' · Yönetici'}</option>`).join('');
+   select.value=MANAGER_ACCOUNTS.some(m=>m.id===existing)?existing:(MANAGER_ACCOUNTS.some(m=>m.id===currentUserId)?currentUserId:'admin');
+ }
+ const targetId=owner?(select?.value||currentUserId):currentUserId;
+ const manager=MANAGER_ACCOUNTS.find(m=>m.id===targetId);
+ const form=document.getElementById('managerPrivateForm');
+ const editHeading=document.getElementById('managerPrivateEditHeading');
+ if(form)form.classList.toggle('hidden',!owner);
+ if(editHeading)editHeading.classList.toggle('hidden',!owner);
+ const state=getPrivateManagerState(targetId);
+ document.getElementById('managerPrivateMonth').textContent=monthLabel();
+ document.getElementById('managerPrivateDate').value=document.getElementById('managerPrivateDate').value||todayIso();
+ const notice=document.getElementById('managerPrivateNotice');
+ if(notice)notice.textContent=owner
+  ?`Ana yönetici olarak seçilen yöneticinin tüm izin ve mesai bilgilerini görebilir, güncelleyebilirsin. Seçili kişi: ${manager?.name||'Yönetici'}.`
+  :'Bu bölüm yalnızca senin kişisel izin ve mesai bilgilerini gösterir. Kayıtları yalnızca ana yönetici güncelleyebilir; diğer yöneticilerin kişisel kayıtları görünmez.';
+ const submit=document.getElementById('managerPrivateSubmit');
+ if(submit)submit.textContent=owner?`${manager?.name||'Seçili yönetici'} kaydını güncelle`:'Kişisel kaydı güncelle';
+ renderPersonalDetails('managerPrivateDetails',state);
+ const acts=(state.activities||[]).slice().sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,20);
+ document.getElementById('managerPrivateHistoryHeading').textContent=owner?`${manager?.name||'Yönetici'} · hareket geçmişi`:'Kişisel hareket geçmişim';
+ document.getElementById('managerPrivateActivities').innerHTML=acts.length?acts.map(activityCard).join(''):'<div class="empty">Henüz kişisel kayıt yok.</div>';
+}
+document.getElementById('managerPrivateTarget')?.addEventListener('change',()=>renderManagerPrivatePanel());
+document.getElementById('managerPrivateForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ if(currentRole!=='admin'||currentAccountRole!=='owner_admin'){toast('Yönetici izin/mesai kayıtlarını yalnızca ana yönetici güncelleyebilir.');return;}
+ const targetId=document.getElementById('managerPrivateTarget')?.value||currentUserId;
+ const manager=MANAGER_ACCOUNTS.find(m=>m.id===targetId);
+ if(!manager){toast('Lütfen bir yönetici seç.');return;}
+ const state=db.managerPrivate[targetId]||(db.managerPrivate[targetId]=createPrivateManagerState());
+ const date=document.getElementById('managerPrivateDate').value;
+ const type=document.getElementById('managerPrivateType').value;
+ const amount=number(document.getElementById('managerPrivateAmount').value);
+ const note=document.getElementById('managerPrivateNote').value.trim();
+ if(!date||amount<=0){toast('Tarih ve pozitif miktar gir.');return;}
+ const mk=monthKey(date);state.monthStats=state.monthStats||{};state.monthStats[mk]=state.monthStats[mk]||{weekendCount:0,overtimeHours:0,excuseUsed:0,unpaidUsed:0};
+ const ms=state.monthStats[mk];let amountLabel='';
+ if(type==='annualAdd'){state.annualBalance=number(state.annualBalance)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='annual'){if(number(state.annualBalance)<amount){toast('Kalan yıllık izin bu kadar düşürülemez.');return;}state.annualBalance=number(state.annualBalance)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='compAdd'){state.compBalance=number(state.compBalance)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='comp'){if(number(state.compBalance)<amount){toast('Kalan serbesti bu kadar düşürülemez.');return;}state.compBalance=number(state.compBalance)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='excuse'){state.excuseUsed=number(state.excuseUsed)+amount;ms.excuseUsed=number(ms.excuseUsed)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='excuseRemove'){if(number(state.excuseUsed)<amount||number(ms.excuseUsed)<amount){toast('Bu ayın mazeret izni kaydından bu miktar düşürülemez.');return;}state.excuseUsed=number(state.excuseUsed)-amount;ms.excuseUsed=number(ms.excuseUsed)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='unpaid'){state.unpaidUsed=number(state.unpaidUsed)+amount;ms.unpaidUsed=number(ms.unpaidUsed)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='unpaidRemove'){if(number(state.unpaidUsed)<amount||number(ms.unpaidUsed)<amount){toast('Bu ayın ücretsiz izin kaydından bu miktar düşürülemez.');return;}state.unpaidUsed=number(state.unpaidUsed)-amount;ms.unpaidUsed=number(ms.unpaidUsed)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='weekend'){ms.weekendCount=number(ms.weekendCount)+amount;amountLabel='+'+amount+' gün';}
+ else if(type==='weekendRemove'){if(number(ms.weekendCount)<amount){toast('Bu ayın hafta tatili mesaisi bu kadar düşürülemez.');return;}ms.weekendCount=number(ms.weekendCount)-amount;amountLabel='−'+amount+' gün';}
+ else if(type==='overtime'){ms.overtimeHours=number(ms.overtimeHours)+amount;amountLabel='+'+amount+' saat';}
+ else if(type==='overtimeRemove'){if(number(ms.overtimeHours)<amount){toast('Bu ayın mesai saati bu kadar düşürülemez.');return;}ms.overtimeHours=number(ms.overtimeHours)-amount;amountLabel='−'+amount+' saat';}
+ else if(type==='annualSet'){state.annualBalance=amount;amountLabel='Yeni bakiye: '+amount+' gün';}
+ else if(type==='compSet'){state.compBalance=amount;amountLabel='Yeni bakiye: '+amount+' gün';}
+ else {toast('İşlem türü tanınmadı.');return;}
+ state.activities=state.activities||[];
+ state.activities.push({id:'ma'+Date.now().toString(36),staffId:targetId,staffName:manager.name,date,type,typeLabel:activityNames[type],amount,amountLabel,note,createdAt:new Date().toISOString(),enteredBy:currentActorName});
+ state.updatedAt=date;saveDb();document.getElementById('managerPrivateNote').value='';document.getElementById('managerPrivateAmount').value='1';renderAll();toast(`${manager.name} için kişisel izin/mesai kaydı güncellendi.`);
+});
+document.getElementById('dashboardSearch').addEventListener('input',renderDashboard);document.getElementById('dashboardTitleFilter').addEventListener('change',renderDashboard);document.getElementById('staffSearch').addEventListener('input',renderStaffAdmin);document.getElementById('activitySearch').addEventListener('input',renderActivities);document.getElementById('activityMonth').addEventListener('change',renderActivities);
+function renderActivities(){if(currentRole!=='admin')return;const q=(document.getElementById('activitySearch').value||'').toLocaleLowerCase('tr');const m=document.getElementById('activityMonth').value;const arr=visibleActivitiesForActor().slice().sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).filter(a=>{const s=getStaff(a.staffId);const hay=`${s?.name||''} ${a.typeLabel} ${a.note||''}`.toLocaleLowerCase('tr');return hay.includes(q)&&(!m||monthKey(a.date)===m)});document.getElementById('activityRows').innerHTML=arr.map(a=>`<tr><td>${esc(a.date)}</td><td><b>${esc(getStaff(a.staffId)?.name||'Silinmiş personel')}</b></td><td>${esc(a.typeLabel)}</td><td><span class="tag">${esc(a.amountLabel)}</span></td><td>${esc(a.note||'—')}</td><td>${esc(a.enteredBy||ADMIN_NAME)}</td></tr>`).join('');document.getElementById('activityEmpty').classList.toggle('hidden',arr.length>0);}
+function renderMine(){if(currentRole!=='employee')return;const s=getStaff(currentUserId);if(!s)return;document.getElementById('mineMonthTag').textContent=monthLabel();renderPersonalDetails('mineDetailList',s);const acts=db.activities.filter(a=>a.staffId===s.id).slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,20);document.getElementById('mineActivityList').innerHTML=acts.length?acts.map(activityCard).join(''):'<div class="empty">Henüz kayıt girilmedi.</div>'; }
+document.getElementById('exportCsv').addEventListener('click',()=>{if(currentRole!=='admin')return;const rows=[['Tarih','Personel','İşlem','Miktar','Açıklama','Kaydı giren'],...visibleActivitiesForActor().map(a=>[a.date,getStaff(a.staffId)?.name||a.staffName||'Silinmiş personel',a.typeLabel,a.amountLabel,a.note||'',a.enteredBy||ADMIN_NAME])];const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='etut-personel-hareketleri.csv';a.click();URL.revokeObjectURL(url);});
+
+// --- Supabase adapter: auth, profile loading, RLS-scoped persistence ---
+function deepCopy(v){return JSON.parse(JSON.stringify(v));}
+function normalizedMonthStats(v){const x=v&&typeof v==='object'?v:{};return Object.fromEntries(Object.entries(x).sort(([a],[b])=>a.localeCompare(b)));}
+function localPersonFromRow(r){return {id:r.id,name:r.full_name,title:'',roleLabel:'Personel',loginEmail:r.login_email,authUserId:r.auth_user_id,accountRole:r.account_role,annualBalance:Number(r.annual_balance||0),compBalance:Number(r.comp_balance||0),excuseUsed:Number(r.excuse_used||0),unpaidUsed:Number(r.unpaid_used||0),monthStats:r.month_stats||{},updatedAt:(r.updated_at||todayIso()).slice(0,10)};}
+function profileSnapshotFromRow(r){return {full_name:r.full_name,annual_balance:Number(r.annual_balance||0),comp_balance:Number(r.comp_balance||0),excuse_used:Number(r.excuse_used||0),unpaid_used:Number(r.unpaid_used||0),month_stats:normalizedMonthStats(r.month_stats||{}),updated_at:r.updated_at||''};}
+function profilePayloadFromLocal(p){return {full_name:p.name,annual_balance:Number(p.annualBalance||0),comp_balance:Number(p.compBalance||0),excuse_used:Number(p.excuseUsed||0),unpaid_used:Number(p.unpaidUsed||0),month_stats:normalizedMonthStats(p.monthStats||{}),updated_at:new Date().toISOString()};}
+function localActivityFromRow(r){const type=r.activity_type;return {id:r.id,staffId:r.staff_id,date:r.event_date,type,typeLabel:activityNames[type]||type,amount:Number(r.amount||0),amountLabel:r.amount_label||String(r.amount||0),note:r.note||'',createdAt:r.created_at||new Date().toISOString(),enteredBy:r.entered_by||''};}
+function activityPayloadFromLocal(a){return {id:a.id,staff_id:a.staffId,event_date:a.date,activity_type:a.type,amount:Number(a.amount||0),amount_label:a.amountLabel||'',note:a.note||'',entered_by:a.enteredBy||currentActorName,created_by:currentAuthUserId,created_at:a.createdAt||new Date().toISOString()};}
+async function initSupabasePublicRoster(){
+ try{
+  if(!window.supabase?.createClient)throw new Error('Supabase JS SDK yüklenemedi.');
+  supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+  const {data,error}=await supabaseClient.from('etut_login_roster').select('id,full_name,account_role,login_email,has_account').order('full_name');
+  if(error)throw error;
+  loginRoster=data||[];
+  document.querySelector('.login-foot').textContent='Supabase bağlantı adresi yüklendi · Ortak kayıt ve gerçek giriş için SQL kurulumu ve kullanıcı hesapları gerekli.';
+  roleSetup(selectedLoginRole||'admin');
+ }catch(e){
+  console.warn('Supabase roster yüklenemedi:',e);
+  loginRoster=[];
+  document.querySelector('.login-foot').textContent='Supabase kurulumu bekleniyor. Önce paket içindeki 01 SQL dosyasını çalıştırın.';
+  roleSetup(selectedLoginRole||'admin');
+ }
+}
+async function loadRemoteDb(profile){
+ remoteSyncReady=false;
+ const {data:rows,error:peopleError}=await supabaseClient.from('etut_staff')
+   .select('id,login_email,full_name,account_role,annual_balance,comp_balance,excuse_used,unpaid_used,month_stats,active,updated_at')
+   .eq('active',true).order('full_name');
+ if(peopleError)throw peopleError;
+ const {data:activityRows,error:activityError}=await supabaseClient.from('etut_activities')
+   .select('id,staff_id,event_date,activity_type,amount,amount_label,note,entered_by,created_by,created_at')
+   .order('created_at',{ascending:false});
+ if(activityError)throw activityError;
+ db={staff:[],activities:[],managerPrivate:Object.fromEntries(MANAGER_ACCOUNTS.map(m=>[m.id,createPrivateManagerState()]))};
+ remoteProfileSnapshot={};remoteActivityIds=new Set();remoteVisibleIds=new Set((rows||[]).map(r=>r.id));
+ for(const r of (rows||[])){
+   remoteProfileSnapshot[r.id]=profileSnapshotFromRow(r);
+   if(r.account_role==='employee')db.staff.push(localPersonFromRow(r));
+   else if(db.managerPrivate[r.id]){
+     db.managerPrivate[r.id]={annualBalance:Number(r.annual_balance||0),compBalance:Number(r.comp_balance||0),excuseUsed:Number(r.excuse_used||0),unpaidUsed:Number(r.unpaid_used||0),monthStats:r.month_stats||{},activities:[],updatedAt:(r.updated_at||todayIso()).slice(0,10)};
+   }
+ }
+ for(const raw of (activityRows||[])){
+   const a=localActivityFromRow(raw);remoteActivityIds.add(a.id);
+   if(db.managerPrivate[a.staffId])db.managerPrivate[a.staffId].activities.push(a);
+   else db.activities.push(a);
+ }
+ // Existing rows in storage are deliberately replaced by the RLS-filtered server response.
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch{}
+ remoteSyncReady=true;
+}
+function collectVisibleLocalProfiles(){
+ const list=db.staff.map(s=>({id:s.id,local:s}));
+ for(const m of MANAGER_ACCOUNTS){if(remoteProfileSnapshot[m.id])list.push({id:m.id,local:{id:m.id,name:m.name,...(db.managerPrivate[m.id]||createPrivateManagerState())}});}
+ return list;
+}
+async function syncDbToSupabase(){
+ if(!supabaseClient||!remoteSyncReady||!remoteMode)return;
+ for(const item of collectVisibleLocalProfiles()){
+   const baseline=remoteProfileSnapshot[item.id];if(!baseline)continue;
+   const payload=profilePayloadFromLocal(item.local);
+   const comparison={...payload,updated_at:baseline.updated_at};
+   if(JSON.stringify({...payload,updated_at:''})===JSON.stringify({...baseline,updated_at:''}))continue;
+   const {data,error}=await supabaseClient.from('etut_staff').update(payload).eq('id',item.id).select('id').maybeSingle();
+   if(error)throw error;if(!data)throw new Error('Profil güncellenemedi; Supabase erişim yetkisini kontrol edin.');
+   remoteProfileSnapshot[item.id]={...payload,month_stats:normalizedMonthStats(payload.month_stats)};
+ }
+ const localActivities=[...(db.activities||[])];
+ for(const m of MANAGER_ACCOUNTS){
+   if(remoteProfileSnapshot[m.id])localActivities.push(...(db.managerPrivate?.[m.id]?.activities||[]));
+ }
+ for(const a of localActivities){
+   if(remoteActivityIds.has(a.id))continue;
+   const payload=activityPayloadFromLocal(a);
+   const {error}=await supabaseClient.from('etut_activities').insert(payload);
+   if(error)throw error;
+   remoteActivityIds.add(a.id);
+ }
+}
+async function refreshRoster(){
+ const {data,error}=await supabaseClient.from('etut_login_roster').select('id,full_name,account_role,login_email,has_account').order('full_name');
+ if(error)throw error;loginRoster=data||[];roleSetup(selectedLoginRole||'admin');
+}
+function renderAccountProvisionPanel(){
+ const panel=document.getElementById('accountProvisionPanel');if(!panel)return;
+ const owner=currentAccountRole==='owner_admin'&&currentRole==='admin';
+ panel.classList.toggle('hidden',!owner);
+ const staffPasswordField=document.getElementById('staffPassword')?.closest('.field');
+ if(staffPasswordField)staffPasswordField.classList.toggle('hidden',!owner);
+ if(!owner)return;
+ const rows=loginRoster.slice().sort((a,b)=>{
+   const rank=x=>x.account_role==='owner_admin'?0:x.account_role==='manager'?1:2;
+   return rank(a)-rank(b)||a.full_name.localeCompare(b.full_name,'tr');
+ });
+ document.getElementById('accountProvisionList').innerHTML=rows.map(r=>`<div class="activity"><div style="flex:1"><b>${esc(r.full_name)}</b><small>${r.account_role==='owner_admin'?'Ana Yönetici':r.account_role==='manager'?'Yönetici':'Personel'} · ${r.has_account?'Hesap tanımlı':'Hesap kurulmamış'}</small><input type="password" autocomplete="new-password" id="provpass-${esc(r.id)}" placeholder="${r.has_account?'Yeni şifre belirle':'İlk şifreyi belirle'} (en az 8 karakter)" style="margin-top:8px;max-width:330px"></div><div class="row-actions"><button type="button" data-provision-account="${esc(r.id)}">${r.has_account?'Şifreyi yenile':'Hesabı oluştur'}</button></div></div>`).join('');
+ document.querySelectorAll('[data-provision-account]').forEach(btn=>btn.onclick=()=>provisionSelectedAccount(btn.dataset.provisionAccount));
+}
+async function provisionSelectedAccount(id){
+ if(currentAccountRole!=='owner_admin'){toast('Hesap açma ve şifre belirleme yalnızca ana yöneticiye açıktır.');return;}
+ const el=document.getElementById('provpass-'+id);const password=el?.value||'';
+ if(password.length<8){toast('Şifre en az 8 karakter olmalı.');el?.focus();return;}
+ const btn=document.querySelector(`[data-provision-account="${CSS.escape(id)}"]`);if(btn){btn.disabled=true;btn.textContent='Kaydediliyor…';}
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('etut-admin-personnel',{body:{action:'provision',staff_id:id,password}});
+  if(error)throw error;if(data?.error)throw new Error(data.error);
+  await refreshRoster();renderAccountProvisionPanel();toast('Hesap hazır. Şifre güvenlik nedeniyle yeniden gösterilmiyor.');
+ }catch(e){console.error(e);toast('Hesap kurulamadı: '+(e?.message||'Edge Function dağıtımını ve yetkileri kontrol edin.'));}
+ finally{if(btn){btn.disabled=false;}}
+}
+async function supabaseStaffSubmit(e){
+ e.preventDefault();e.stopImmediatePropagation();
+ if(currentRole!=='admin'){toast('Bu işlem yalnızca yöneticilere açık.');return;}
+ const id=document.getElementById('editStaffId').value;
+ const name=document.getElementById('staffName').value.trim();
+ const password=document.getElementById('staffPassword').value;
+ if(!name){toast('Ad soyad girin.');return;}
+ const month=monthKey();const monthStats={[month]:{weekendCount:number(document.getElementById('weekendCount').value),overtimeHours:number(document.getElementById('overtimeHours').value),excuseUsed:0,unpaidUsed:0}};
+ const values={annual_balance:number(document.getElementById('annualBalance').value),comp_balance:number(document.getElementById('compBalance').value),excuse_used:number(document.getElementById('excuseUsed').value),unpaid_used:number(document.getElementById('unpaidUsed').value),month_stats:monthStats};
+ try{
+  if(id){
+    const person=db.staff.find(p=>p.id===id);if(!person){toast('Personel bulunamadı.');return;}
+    if(password){
+      if(currentAccountRole!=='owner_admin'){toast('Şifreyi yalnızca ana yönetici belirleyebilir.');return;}
+      const {data,error}=await supabaseClient.functions.invoke('etut-admin-personnel',{body:{action:'provision',staff_id:id,password}});if(error)throw error;if(data?.error)throw new Error(data.error);
+    }
+    person.name=name;person.annualBalance=values.annual_balance;person.compBalance=values.comp_balance;person.excuseUsed=values.excuse_used;person.unpaidUsed=values.unpaid_used;person.monthStats=person.monthStats||{};person.monthStats[month]={...(person.monthStats[month]||{}),...monthStats[month]};person.updatedAt=todayIso();person.loginEmail=person.loginEmail||loginRoster.find(r=>r.id===id)?.login_email;
+    saveDb();
+  }else{
+    if(currentAccountRole!=='owner_admin'){toast('Yeni personel eklemek yalnızca ana yöneticiye açıktır.');return;}
+    if(!password){toast('Yeni personel için şifre belirleyin.');document.getElementById('staffPassword').focus();return;}
+    const {data,error}=await supabaseClient.functions.invoke('etut-admin-personnel',{body:{action:'create',full_name:name,password,...values}});
+    if(error)throw error;if(data?.error)throw new Error(data.error);
+    const p=localPersonFromRow(data.person);db.staff.push(p);remoteVisibleIds.add(p.id);remoteProfileSnapshot[p.id]=profileSnapshotFromRow(data.person);
+    await refreshRoster();
+  }
+  clearStaffForm();renderAll();toast(id?'Personel kaydı güncellendi.':'Personel ve kullanıcı hesabı oluşturuldu.');
+ }catch(err){console.error(err);toast('Kaydedilemedi: '+(err?.message||'Supabase bağlantısını ve Edge Function dağıtımını kontrol edin.'));}
+}
+// Run before the original bubble-phase form listener so local-only writes do not execute.
+document.getElementById('staffForm').addEventListener('submit',supabaseStaffSubmit,true);
+// Replace the old direct-click login handler and local-only logout handler.
+const oldLoginSubmit=document.getElementById('loginSubmit');const newLoginSubmit=oldLoginSubmit.cloneNode(true);oldLoginSubmit.replaceWith(newLoginSubmit);newLoginSubmit.addEventListener('click',e=>{e.preventDefault();doPreviewLogin();});
+const oldLogout=document.getElementById('logoutBtn');const newLogout=oldLogout.cloneNode(true);oldLogout.replaceWith(newLogout);newLogout.addEventListener('click',async()=>{try{if(supabaseClient)await supabaseClient.auth.signOut();}finally{remoteSyncReady=false;remoteMode=false;currentRole='admin';currentAccountRole=null;currentUserId='admin';currentAuthUserId=null;currentActorName=ADMIN_NAME;currentLoginPresentation='admin';document.getElementById('appScreen').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginPassword').value='';roleSetup('admin');}});
+// Main admin may deactivate personnel, but other managers cannot create/delete accounts.
+deleteStaff = async function(id){
+ if(currentAccountRole!=='owner_admin'){toast('Personel silme işlemi yalnızca ana yöneticiye açıktır.');return;}
+ const person=db.staff.find(x=>x.id===id);if(!person)return;
+ if(!confirm(`${person.name} hesabını pasife almak istiyor musun? İşlem geçmişi veritabanında korunur.`))return;
+ try{const {data,error}=await supabaseClient.functions.invoke('etut-admin-personnel',{body:{action:'deactivate',staff_id:id}});if(error)throw error;if(data?.error)throw new Error(data.error);db.staff=db.staff.filter(x=>x.id!==id);delete remoteProfileSnapshot[id];remoteVisibleIds.delete(id);await refreshRoster();renderAll();toast('Personel hesabı pasife alındı.');}
+ catch(e){console.error(e);toast('Personel pasife alınamadı: '+(e?.message||'Yetkileri kontrol edin.'));}
+};
+const originalRenderAll=renderAll;
+renderAll=function(){originalRenderAll();renderAccountProvisionPanel();};
+document.getElementById('refreshCloudBtn').addEventListener('click',async()=>{
+ if(!remoteMode||!supabaseClient){toast('Önce Supabase hesabıyla giriş yapın.');return;}
+ const button=document.getElementById('refreshCloudBtn');button.disabled=true;
+ try{
+  const {data:{user},error:userError}=await supabaseClient.auth.getUser();if(userError||!user)throw new Error('Oturum bulunamadı; tekrar giriş yapın.');
+  const {data:profile,error}=await supabaseClient.from('etut_staff').select('id,login_email,full_name,account_role,annual_balance,comp_balance,excuse_used,unpaid_used,month_stats,active,updated_at').eq('id',currentUserId).eq('active',true).maybeSingle();
+  if(error||!profile)throw error||new Error('Aktif profil bulunamadı.');
+  await loadRemoteDb(profile);renderAll();toast('Supabase verileri güncellendi.');
+ }catch(e){console.error(e);toast('Yenileme başarısız: '+(e?.message||'Bağlantıyı kontrol edin.'));}
+ finally{button.disabled=false;}
+});
+roleSetup('admin');
+initSupabasePublicRoster();
+</script>
+</body>
+</html>
